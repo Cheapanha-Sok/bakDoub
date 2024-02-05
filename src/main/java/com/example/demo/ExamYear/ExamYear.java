@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -18,13 +18,13 @@ public class ExamYear {
     @Column(name = "exam_date" , unique = true)
     @DateTimeFormat(pattern="yyyy-MM-dd")
     @JsonFormat(pattern="yyyy")
-    private Date examDate;
+    private LocalDate examDate;
 
-    public ExamYear(Long examYearId , Date examDate){
+    public ExamYear(Long examYearId , LocalDate examDate){
         this.examYearId = examYearId;
         this.examDate = examDate;
     }
-    public ExamYear(Date examDate){
+    public ExamYear(LocalDate examDate){
         this.examDate = examDate;
     }
 
@@ -40,11 +40,11 @@ public class ExamYear {
         this.examYearId = examYearId;
     }
 
-    public Date getExamDate() {
+    public LocalDate getExamDate() {
         return examDate;
     }
 
-    public void setExamDate(Date examDate) {
+    public void setExamDate(LocalDate examDate) {
         this.examDate = examDate;
     }
     @ManyToMany(mappedBy = "examYears" , fetch = FetchType.LAZY ,cascade = CascadeType.ALL)

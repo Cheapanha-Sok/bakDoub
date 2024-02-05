@@ -59,11 +59,9 @@ public class ExamAnswerService {
                 }
                 examAnswerRepository.save(examAnswer);
                 return ResponseEntity.ok(String.format("Url: %s",examAnswer.getPdfUrl()));
-
             }
-            throw  new NotFoundException("Exam year  with Date" + examDate + "not found");
-
+            throw  new NotFoundException("Categories  with categoriesName" + categoriesName + "not found");
         }
-        throw  new NotFoundException("Categories  with categoriesName" + categoriesName + "not found");
+        throw  new NotFoundException("Exam year  with Date" + examDate + "not found");
     }
 }
