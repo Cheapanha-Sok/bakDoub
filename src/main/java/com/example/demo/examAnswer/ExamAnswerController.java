@@ -3,12 +3,13 @@ package com.example.demo.examAnswer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
 
 @RestController
-@RequestMapping(path = "api/v1/ExamAnswer")
+@RequestMapping(path = "api/v1/examAnswer/")
 public class ExamAnswerController {
     private final ExamAnswerService examAnswerService;
 
@@ -24,11 +25,15 @@ public class ExamAnswerController {
     public ResponseEntity<Optional<ExamAnswer>> getExamAnswer(@PathVariable("examYearId") Long examYearId) {
         return examAnswerService.getExamAnswer(examYearId);
     }
+    @PostMapping("{exam_year_id}/{categories_id}")
+    public ResponseEntity<String> createExamAnswer(
+            PdfModel pdfModel,
+            @PathVariable("exam_year_id") Long examYearId,
+            @PathVariable("categories_id") Long categoriesId) {
 
-    @PostMapping("{exam_year_id}")
-    public ResponseEntity<String> createExamAnswer(@RequestBody PdfModel pdfModel , @PathVariable("exam_year_id")Long examYearId) {
-        return examAnswerService.createExamAnswer(pdfModel , examYearId);
+        return examAnswerService.createExamAnswer(pdfModel, examYearId, categoriesId);
     }
+
 
     @DeleteMapping("{exam_year_id}")
     public ResponseEntity<HttpStatus> deleteExamAnswer(@PathVariable("exam_year_id")  Long examAnswerId) {

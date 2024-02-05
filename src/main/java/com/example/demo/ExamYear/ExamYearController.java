@@ -8,7 +8,7 @@ import java.net.URI;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "api/v1/ExamYear")
+@RequestMapping(path = "api/v1/examYear/")
 public class ExamYearController {
     private final ExamYearService examYearService;
 

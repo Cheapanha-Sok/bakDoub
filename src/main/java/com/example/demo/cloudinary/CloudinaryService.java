@@ -1,6 +1,7 @@
 package com.example.demo.cloudinary;
 
 import com.cloudinary.Cloudinary;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,7 +10,7 @@ import java.util.Map;
 
 @Service
 public class CloudinaryService {
-
+    @Resource
     private final Cloudinary cloudinary;
     CloudinaryService(Cloudinary cloudinary){
         this.cloudinary = cloudinary;

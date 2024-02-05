@@ -1,6 +1,7 @@
 package com.example.demo.ExamYear;
 
 import com.example.demo.examAnswer.ExamAnswer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,10 +12,12 @@ import java.util.List;
 @Table(name = "exam_year")
 public class ExamYear {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "exam_year_id")
     private Long examYearId;
     @Column(name = "exam_date" , unique = true)
     @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern="yyyy")
     private Date examDate;
 
     public ExamYear(Long examYearId , Date examDate){
@@ -22,7 +25,7 @@ public class ExamYear {
         this.examDate = examDate;
     }
     public ExamYear(Date examDate){
-        this.examYearId = examYearId;
+        this.examDate = examDate;
     }
 
     public ExamYear() {
@@ -44,7 +47,7 @@ public class ExamYear {
     public void setExamDate(Date examDate) {
         this.examDate = examDate;
     }
-    @ManyToMany(mappedBy = "examYears" , fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "examYears" , fetch = FetchType.LAZY ,cascade = CascadeType.ALL)
     private List<ExamAnswer> examAnswers;
 
     @Override

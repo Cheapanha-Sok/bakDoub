@@ -1,10 +1,11 @@
 package com.example.demo.examAnswer;
 import com.example.demo.ExamYear.ExamYear;
 import com.example.demo.ExamYear.ExamYearRepository;
+import com.example.demo.categories.Categories;
+import com.example.demo.categories.CategoriesRepository;
 import com.example.demo.cloudinary.CloudinaryService;
 import com.example.demo.exception.NotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,16 +13,16 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class ExamAnswerService {
     private final CloudinaryService cloudinaryService;
     private final ExamAnswerRepository examAnswerRepository;
     private final ExamYearRepository examYearRepository;
-    @Autowired
-    ExamAnswerService(ExamAnswerRepository examAnswerRepository , CloudinaryService cloudinaryService , ExamYearRepository examYearRepository){
+    private final CategoriesRepository categoriesRepository;
+    ExamAnswerService(ExamAnswerRepository examAnswerRepository , CloudinaryService cloudinaryService , ExamYearRepository examYearRepository , CategoriesRepository categoriesRepository){
         this.examAnswerRepository = examAnswerRepository;
         this.cloudinaryService = cloudinaryService;
         this.examYearRepository = examYearRepository;
+        this.categoriesRepository = categoriesRepository;
     }
     public ResponseEntity<Iterable<ExamAnswer>> getAllExamAnswer(){
         return ResponseEntity.ok(examAnswerRepository.findAll());
@@ -33,6 +34,7 @@ public class ExamAnswerService {
         }
         throw new NotFoundException("ExamAnswer with id=" + examAnswerId + "not found");
     }
+    @Transactional
     public ResponseEntity<HttpStatus> deleteExamAnswer(Long examAnswerId){
         boolean isExist = examAnswerRepository.existsById(examAnswerId);
         if(isExist){
@@ -41,16 +43,14 @@ public class ExamAnswerService {
         }
         throw new NotFoundException("ExamAnswer with id=" + examAnswerId + "not found");
     }
-    public ResponseEntity<String> createExamAnswer(PdfModel pdfModel , Long examYearId){
+    @Transactional
+    public ResponseEntity<String> createExamAnswer(PdfModel pdfModel , Long examYearId , Long categoriesId){
         Optional<ExamYear> examYear = examYearRepository.findById(examYearId);
-        if (examYear.isPresent()){
-            if (pdfModel.getName() == null || pdfModel.getName().isEmpty() || pdfModel.getName().isBlank()){
-                return ResponseEntity.badRequest().build();
-            }if (pdfModel.getFile().isEmpty() || pdfModel.getFile() == null){
-                return ResponseEntity.badRequest().build();
-            }
+        Optional<Categories> categories = categoriesRepository.findById(categoriesId);
+        if (examYear.isPresent() && categories.isPresent()){
             ExamAnswer examAnswer = new ExamAnswer();
-            examAnswer.setExamAnswerName(pdfModel.getName());
+            examAnswer.setExamYears(examAnswer.getExamYears());
+            examAnswer.setCategories(categories.get());
             examAnswer.setPdfUrl(cloudinaryService.uploadFile(pdfModel.getFile() , examYear.get().toString()));
             if (examAnswer.getPdfUrl() == null){
                 return ResponseEntity.badRequest().build();
@@ -58,7 +58,7 @@ public class ExamAnswerService {
             examAnswerRepository.save(examAnswer);
             return ResponseEntity.ok(String.format("Url: %s",examAnswer.getPdfUrl()));
         }
-        throw  new NotFoundException("Exam year with id" + examYearId + "not found");
+        throw  new NotFoundException("Exam year  with id" + examYearId + "not found");
 
 
     }

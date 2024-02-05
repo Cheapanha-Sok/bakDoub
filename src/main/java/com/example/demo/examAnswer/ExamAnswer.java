@@ -12,21 +12,17 @@ public class ExamAnswer {
     @Column(name = "exam_answer_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long examAnswerId;
-    @Column(name = "exam_answer_name" , unique = true)
-    private String examAnswerName;
     @Column(name = "pdf_url" , unique = true)
     private String pdfUrl;
 
     public ExamAnswer(){
 
     }
-    public ExamAnswer(Long examAnswerId , String examAnswerName , String pdfUrl){
+    public ExamAnswer(Long examAnswerId , String pdfUrl){
         this.examAnswerId = examAnswerId;
-        this.examAnswerName = examAnswerName;
         this.pdfUrl = pdfUrl;
     }
     public ExamAnswer(String examAnswerName , String pdfUrl){
-        this.examAnswerName = examAnswerName;
         this.pdfUrl = pdfUrl;
     }
 
@@ -36,14 +32,6 @@ public class ExamAnswer {
 
     public void setExamAnswerId(Long examAnswerId) {
         this.examAnswerId = examAnswerId;
-    }
-
-    public String getExamAnswerName() {
-        return examAnswerName;
-    }
-
-    public void setExamAnswerName(String examAnswerName) {
-        this.examAnswerName = examAnswerName;
     }
 
     public String getPdfUrl() {
@@ -82,8 +70,9 @@ public class ExamAnswer {
     public String toString() {
         return "ExamAnswer{" +
                 "examAnswerId=" + examAnswerId +
-                ", examAnswerName='" + examAnswerName + '\'' +
                 ", pdfUrl='" + pdfUrl + '\'' +
+                ", categories=" + categories +
+                ", examYears=" + examYears +
                 '}';
     }
 }

@@ -11,7 +11,6 @@ import java.net.URI;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class ExamYearService {
 
     private final ExamYearRepository examYearRepository;
@@ -31,12 +30,12 @@ public class ExamYearService {
         throw new NotFoundException("ExamYear with id=" + examYearId + "not found");
 
     }
-
+    @Transactional
     public ResponseEntity<URI> createExamYear(ExamYear examYear) {
         examYearRepository.save(examYear);
-        return ResponseEntity.created(URI.create("/api/v1/faculty/" + examYear.getExamYearId())).build();
+        return ResponseEntity.created(URI.create("/api/v1/examYear/" + examYear.getExamYearId())).build();
     }
-
+    @Transactional
     public ResponseEntity<HttpStatus> removeExamYear(Long examYearId) {
         boolean isExist = examYearRepository.existsById(examYearId);
         if (isExist){
@@ -45,7 +44,7 @@ public class ExamYearService {
         }
         throw new NotFoundException("ExamYear with id=" + examYearId + "not found");
     }
-
+    @Transactional
     public ResponseEntity<ExamYear> updatedExamYear(Long examYearId, ExamYear updatedExamYear) {
         Optional<ExamYear> examYear = examYearRepository.findById(examYearId);
         if (examYear.isPresent()){
