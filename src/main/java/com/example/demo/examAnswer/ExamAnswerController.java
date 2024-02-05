@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
@@ -29,12 +30,11 @@ public class ExamAnswerController {
     @PostMapping("{exam_year_date}/{categories_name}")
     public ResponseEntity<String> createExamAnswer(
             PdfModel pdfModel,
-            @PathVariable("exam_year_date") Date examYearDate,
+            @PathVariable("exam_year_date") LocalDate examYearDate,
             @PathVariable("categories_name") String categories_name) {
 
         return examAnswerService.createExamAnswer(pdfModel, examYearDate, categories_name);
     }
-
 
     @DeleteMapping("{exam_year_id}")
     public ResponseEntity<HttpStatus> deleteExamAnswer(@PathVariable("exam_year_id")  Long examAnswerId) {

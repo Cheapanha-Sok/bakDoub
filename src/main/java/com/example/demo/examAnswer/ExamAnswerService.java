@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,13 +47,13 @@ public class ExamAnswerService {
         throw new NotFoundException("ExamAnswer with id=" + examAnswerId + "not found");
     }
     @Transactional
-    public ResponseEntity<String> createExamAnswer(PdfModel pdfModel , Date examDate , String categoriesName){
+    public ResponseEntity<String> createExamAnswer(PdfModel pdfModel , LocalDate examDate , String categoriesName){
         Optional<ExamYear> examYear = examYearRepository.findExamYearByExamDate(examDate);
         Optional<Categories> categories = categoriesRepository.findCategoriesByCategoriesName(categoriesName);
         if (examYear.isPresent()){
             if (categories.isPresent()){
                 ExamAnswer examAnswer = new ExamAnswer();
-                examAnswer.setExamYears(examAnswer.getExamYears());
+                examAnswer.setExamYears(List.of(examYear.get()));
                 examAnswer.setCategories(categories.get());
                 examAnswer.setPdfUrl(cloudinaryService.uploadFile(pdfModel.getFile() , examYear.get().toString()));
                 if (examAnswer.getPdfUrl() == null){

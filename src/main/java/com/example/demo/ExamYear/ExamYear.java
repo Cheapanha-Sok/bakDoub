@@ -16,9 +16,9 @@ public class ExamYear {
     @Column(name = "exam_year_id")
     private Long examYearId;
     @Column(name = "exam_date" , unique = true)
-    @DateTimeFormat(pattern="yyyy-MM-dd")
-    @JsonFormat(pattern="yyyy")
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate examDate;
+
 
     public ExamYear(Long examYearId , LocalDate examDate){
         this.examYearId = examYearId;

@@ -50,10 +50,6 @@ public class ExamAnswer {
         this.categories = categories;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categories_id" , referencedColumnName = "categories_id")
-    private Categories categories;
-
     public List<ExamYear> getExamYears() {
         return examYears;
     }
@@ -62,9 +58,14 @@ public class ExamAnswer {
         this.examYears = examYears;
     }
 
-    @ManyToMany(fetch = FetchType.LAZY ,cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
-    @JoinTable(name = "bakdoubAnswer" , joinColumns = @JoinColumn(name = "exam_answer_id") , inverseJoinColumns = @JoinColumn(name = "exam_year_id"))
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "categories_id", referencedColumnName = "categories_id")
+    private Categories categories;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @JoinTable(name = "bakdoubAnswer", joinColumns = @JoinColumn(name = "exam_answer_id"), inverseJoinColumns = @JoinColumn(name = "exam_year_id"))
     private List<ExamYear> examYears;
+
 
     @Override
     public String toString() {
