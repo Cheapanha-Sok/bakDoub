@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.Optional;
 
 
@@ -25,13 +26,13 @@ public class ExamAnswerController {
     public ResponseEntity<Optional<ExamAnswer>> getExamAnswer(@PathVariable("examYearId") Long examYearId) {
         return examAnswerService.getExamAnswer(examYearId);
     }
-    @PostMapping("{exam_year_id}/{categories_id}")
+    @PostMapping("{exam_year_date}/{categories_name}")
     public ResponseEntity<String> createExamAnswer(
             PdfModel pdfModel,
-            @PathVariable("exam_year_id") Long examYearId,
-            @PathVariable("categories_id") Long categoriesId) {
+            @PathVariable("exam_year_date") Date examYearDate,
+            @PathVariable("categories_name") String categories_name) {
 
-        return examAnswerService.createExamAnswer(pdfModel, examYearId, categoriesId);
+        return examAnswerService.createExamAnswer(pdfModel, examYearDate, categories_name);
     }
 
 

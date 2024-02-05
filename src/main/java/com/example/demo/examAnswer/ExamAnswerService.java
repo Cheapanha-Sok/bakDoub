@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -44,22 +45,25 @@ public class ExamAnswerService {
         throw new NotFoundException("ExamAnswer with id=" + examAnswerId + "not found");
     }
     @Transactional
-    public ResponseEntity<String> createExamAnswer(PdfModel pdfModel , Long examYearId , Long categoriesId){
-        Optional<ExamYear> examYear = examYearRepository.findById(examYearId);
-        Optional<Categories> categories = categoriesRepository.findById(categoriesId);
-        if (examYear.isPresent() && categories.isPresent()){
-            ExamAnswer examAnswer = new ExamAnswer();
-            examAnswer.setExamYears(examAnswer.getExamYears());
-            examAnswer.setCategories(categories.get());
-            examAnswer.setPdfUrl(cloudinaryService.uploadFile(pdfModel.getFile() , examYear.get().toString()));
-            if (examAnswer.getPdfUrl() == null){
-                return ResponseEntity.badRequest().build();
+    public ResponseEntity<String> createExamAnswer(PdfModel pdfModel , Date examDate , String categoriesName){
+        Optional<ExamYear> examYear = examYearRepository.findExamYearByExamDate(examDate);
+        Optional<Categories> categories = categoriesRepository.findCategoriesByCategoriesName(categoriesName);
+        if (examYear.isPresent()){
+            if (categories.isPresent()){
+                ExamAnswer examAnswer = new ExamAnswer();
+                examAnswer.setExamYears(examAnswer.getExamYears());
+                examAnswer.setCategories(categories.get());
+                examAnswer.setPdfUrl(cloudinaryService.uploadFile(pdfModel.getFile() , examYear.get().toString()));
+                if (examAnswer.getPdfUrl() == null){
+                    return ResponseEntity.badRequest().build();
+                }
+                examAnswerRepository.save(examAnswer);
+                return ResponseEntity.ok(String.format("Url: %s",examAnswer.getPdfUrl()));
+
             }
-            examAnswerRepository.save(examAnswer);
-            return ResponseEntity.ok(String.format("Url: %s",examAnswer.getPdfUrl()));
+            throw  new NotFoundException("Exam year  with Date" + examDate + "not found");
+
         }
-        throw  new NotFoundException("Exam year  with id" + examYearId + "not found");
-
-
+        throw  new NotFoundException("Categories  with categoriesName" + categoriesName + "not found");
     }
 }
