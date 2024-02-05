@@ -55,7 +55,7 @@ public class ExamAnswerService {
                 ExamAnswer examAnswer = new ExamAnswer();
                 examAnswer.setExamYears(List.of(examYear.get()));
                 examAnswer.setCategories(categories.get());
-                examAnswer.setPdfUrl(cloudinaryService.uploadFile(pdfModel.getFile() , examYear.get().toString()));
+                examAnswer.setPdfUrl(cloudinaryService.uploadFile(pdfModel.getFile() , examDate.toString()));
                 if (examAnswer.getPdfUrl() == null){
                     return ResponseEntity.badRequest().build();
                 }
